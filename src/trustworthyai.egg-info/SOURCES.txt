@@ -1,0 +1,14 @@
+pyproject.toml
+src/trustworthy_ai/__init__.py
+src/trustworthy_ai/models/__init__.py
+src/trustworthy_ai/models/falling_rule_lists.py
+src/trustworthy_ai/models/gam.py
+src/trustworthy_ai/models/slim.py
+src/trustworthyai.egg-info/PKG-INFO
+src/trustworthyai.egg-info/SOURCES.txt
+src/trustworthyai.egg-info/dependency_links.txt
+src/trustworthyai.egg-info/requires.txt
+src/trustworthyai.egg-info/top_level.txt
+tests/test_falling_rule_lists.py
+tests/test_gam.py
+tests/test_slim.py
