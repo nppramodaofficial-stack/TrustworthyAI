@@ -29,6 +29,8 @@ The project focuses on:
 
 The long-term objective is to develop a comprehensive Python library covering interpretable models, explanation methods, feature selection, uncertainty quantification, and other components of trustworthy machine learning.
 
+---
+
 ## 2. Current Implementations
 
 The library currently includes three principal model implementations.
@@ -43,7 +45,29 @@ The model assigns observations to the first rule they satisfy and associates eac
 
 The falling structure imposes a monotonically decreasing ordering on the probabilities associated with successive rules.
 
+**Mathematical formulation**
+
+The prediction probability associated with the first satisfied rule is:
+
+```math
+P(Y=1 \mid X)=p_k
+```
+
+The probabilities follow a monotonically decreasing constraint:
+
+```math
+p_1 \geq p_2 \geq \cdots \geq p_K
+```
+
+Where:
+
+- `X` represents the input observation.
+- `Y` represents the target variable.
+- `p_k` represents the probability associated with the first satisfied rule.
+- `K` represents the number of rules.
+
 **Mathematical concepts:**
+
 - Ordered logical rules.
 - First-match rule assignment.
 - Conditional probability estimation.
@@ -52,6 +76,7 @@ The falling structure imposes a monotonically decreasing ordering on the probabi
 - Simulated annealing for rule-search optimization.
 
 **Implemented functionality:**
+
 - Conjunction-based rule generation.
 - Rule ordering and assignment.
 - Monotonic probability estimation.
@@ -68,19 +93,41 @@ SLIM constructs interpretable scoring systems using integer-valued coefficients.
 
 The core optimization objective is:
 
-\[
+```math
 \min_{\lambda}
+\left[
 \frac{1}{N}\sum_{i=1}^{N}
-\mathbb{1}[\hat y_i\neq y_i]
+\mathbb{1}[\hat{y}_i \neq y_i]
 +
 C_0\|\lambda\|_0
-\]
+\right]
+```
 
-Subject to integer coefficient constraints and a coprimality requirement.
+Subject to integer coefficient constraints:
+
+```math
+\lambda_j \in \mathcal{L}
+```
+
+And a coprimality requirement:
+
+```math
+\gcd(\lambda_1,\lambda_2,\ldots,\lambda_p)=1
+```
+
+Where:
+
+- `N` represents the number of observations.
+- `y_i` represents the actual class label.
+- `y_hat_i` represents the predicted class label.
+- `C_0` controls the sparsity penalty.
+- `||lambda||_0` counts non-zero coefficients.
+- `L` represents the permitted coefficient set.
 
 The objective balances predictive errors against model sparsity.
 
 **Mathematical concepts:**
+
 - Integer-valued optimization.
 - L0 sparsity regularization.
 - Mixed-integer linear programming.
@@ -89,6 +136,7 @@ The objective balances predictive errors against model sparsity.
 - Sparse scoring systems.
 
 **Implemented functionality:**
+
 - Integer coefficient estimation.
 - Mixed-integer optimization using SciPy.
 - Feature selection through binary optimization variables.
@@ -109,16 +157,63 @@ Generalized Additive Models extend linear models by allowing individual features
 
 The model is represented as:
 
-\[
-g(E[Y\mid X]) =
+```math
+g\left(E[Y\mid X]\right)
+=
 \beta_0+\sum_{j=1}^{p}f_j(X_j)
-\]
+```
+
+For Gaussian regression with an identity link:
+
+```math
+Y=\beta_0+\sum_{j=1}^{p}f_j(X_j)+\epsilon
+```
 
 Each feature contributes independently to the final prediction through its corresponding learned function.
 
-The current implementation focuses on Gaussian regression using cubic B-spline basis functions and penalized least squares.
+**Spline representation**
+
+Each feature function is represented using a collection of B-spline basis functions:
+
+```math
+f_j(X_j)=\sum_{k=1}^{K}\beta_{jk}B_{jk}(X_j)
+```
+
+Where:
+
+- `f_j` represents the learned effect of feature `j`.
+- `B_jk` represents a spline basis function.
+- `beta_jk` represents the corresponding spline coefficient.
+- `K` represents the number of spline basis functions.
+
+**Penalized least-squares objective**
+
+The model estimates coefficients by minimizing prediction error while penalizing excessive variation in the spline coefficients:
+
+```math
+\min_{\beta}
+\left\{
+\|y-B\beta\|_2^2+
+\lambda\beta^TP\beta
+\right\}
+```
+
+The second-order difference penalty is:
+
+```math
+P=D_2^TD_2
+```
+
+Where:
+
+- `B` represents the additive spline design matrix.
+- `beta` represents the model coefficient vector.
+- `lambda` controls the smoothness penalty.
+- `P` represents the penalty matrix.
+- `D_2` represents the second-order difference operator.
 
 **Mathematical concepts:**
+
 - Additive model architecture.
 - B-spline basis functions.
 - Cox–de Boor recursion.
@@ -128,6 +223,7 @@ The current implementation focuses on Gaussian regression using cubic B-spline b
 - Smoothness regularization.
 
 **Implemented functionality:**
+
 - B-spline basis generation.
 - Additive design matrix construction.
 - Feature-wise spline estimation.
@@ -157,6 +253,8 @@ The project therefore emphasizes the following concepts:
 
 Each model is developed with attention to its objective function, assumptions, constraints, optimization strategy, and interpretability properties.
 
+---
+
 ## 4. Technology Stack
 
 The project is developed using Python and its scientific computing ecosystem.
@@ -171,6 +269,8 @@ The project is developed using Python and its scientific computing ecosystem.
 | Git | Version control |
 | GitHub | Source code management and collaboration |
 | PyCharm | Development environment |
+
+---
 
 ## 5. Project Structure
 
@@ -218,6 +318,8 @@ The library follows a modular design:
 
 This structure allows new algorithms and supporting components to be incorporated without disrupting existing implementations.
 
+---
+
 ## 6. Installation
 
 ### Clone the repository
@@ -249,6 +351,8 @@ pip install -e .
 ```
 
 The project uses the dependencies specified in `pyproject.toml`.
+
+---
 
 ## 7. Usage
 
